@@ -1,9 +1,10 @@
 <?php
 
-namespace division\Data\DAO\Interfaces;
+namespace division\Data\DAO\guild;
 
 use division\Data\DAO\BaseDAO;
 use division\Data\DAO\Interfaces\IGuildDAO;
+use division\Models\Article;
 use division\Models\Guild;
 use PDOException;
 
@@ -18,6 +19,24 @@ class GuildDAO extends BaseDAO implements IGuildDAO {
 			$req->bindValue(3, $guild->getOwner()->getId());
 
 			$req->execute();
+		} catch (PDOException) {
+		}
+	}
+
+	public function getAll(): array {
+		try{
+			$req = $this->database->prepare('SELECT * FROM guilds');
+			$req->execute();
+
+			$guilds = [];
+			$data = $req->fetchAll();
+			foreach ($data as $datum) {
+				$guild = new Guild();
+				$guild->hydrate($datum);
+				$guilds[] = $guild;
+			}
+
+			return $guilds;
 		} catch (PDOException) {
 		}
 	}
