@@ -3,8 +3,6 @@
 namespace division\Models;
 
 class Guild {
-	private int $id;
-
 	private string $name;
 
 	private string $description;
@@ -12,9 +10,6 @@ class Guild {
 	private User $owner;
 
 	public function hydrate(array $data) {
-		if(array_key_exists('id', $data)) {
-			$this->id = $data['id'];
-		}
 		if(array_key_exists('name', $data)) {
 			$this->name = $data['name'];
 		}

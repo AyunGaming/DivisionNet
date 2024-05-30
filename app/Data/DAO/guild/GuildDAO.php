@@ -4,7 +4,6 @@ namespace division\Data\DAO\guild;
 
 use division\Data\DAO\BaseDAO;
 use division\Data\DAO\Interfaces\IGuildDAO;
-use division\Models\Article;
 use division\Models\Guild;
 use PDOException;
 
