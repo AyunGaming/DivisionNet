@@ -6,6 +6,7 @@ use division\Data\DAO\UserDAO;
 use division\Data\Database;
 use division\HTTP\Middlewares\GetUserMiddleware;
 use division\HTTP\Routing\CharacterController;
+use division\HTTP\Routing\GuildController;
 use division\HTTP\Routing\KamenewsController;
 use division\HTTP\Routing\UserController;
 use division\Models\Managers\UserManager;
@@ -98,6 +99,13 @@ $app->group('/kamenews', static function (RouteCollectorProxy $kamenews) {
 		$create->post('/kamenews', [KamenewsController::class, 'createKamenews'])->setName('create-kamenews');
 		$create->post('/delete-article', [KamenewsController::class, 'deleteArticle'])->setName('delete-article');
 		$create->get('', [KamenewsController::class, 'displayCreateKamenews'])->setName('new-kamenews');
+	});
+});
+
+$app->group('/guild', static function (RouteCollectorProxy $guild) {
+	$guild->group('create', static function (RouteCollectorProxy $create) {
+		$create->post('', [GuildController::class, 'create'])->setName('create-guild');
+		$create->get('', [GuildController::class, 'viewCreateGuild'])->setName('guild-creation');
 	});
 });
 
