@@ -9,7 +9,7 @@ class Guild {
 
 	private User $owner;
 
-	public function hydrate(array $data) {
+	public function hydrate(array $data): void {
 		if(array_key_exists('name', $data)) {
 			$this->name = $data['name'];
 		}

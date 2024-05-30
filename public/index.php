@@ -103,7 +103,10 @@ $app->group('/kamenews', static function (RouteCollectorProxy $kamenews) {
 });
 
 $app->group('/guild', static function (RouteCollectorProxy $guild) {
-	$guild->group('create', static function (RouteCollectorProxy $create) {
+	$guild->group('/manage', static function (RouteCollectorProxy $manage) {
+		$manage->get('', [GuildController::class, 'viewManageGuild'])->setName('manage-guild');
+	});
+	$guild->group('/create', static function (RouteCollectorProxy $create) {
 		$create->post('', [GuildController::class, 'create'])->setName('create-guild');
 		$create->get('', [GuildController::class, 'viewCreateGuild'])->setName('guild-creation');
 	});

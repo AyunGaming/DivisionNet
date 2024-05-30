@@ -44,6 +44,22 @@ class GuildController extends AbstractController{
 		return $res;
 	}
 
+	public function viewManageGuild(Request $request, Response $response, Twig $twig): Response{
+		$user = $request->getAttribute(User::class);
+		$guild = $this->guildManager->getByOwner($user);
+
+		if($guild == null){
+			$parser = RouteContext::fromRequest($request)->getRouteParser();
+			return $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('create-guild'));
+		}
+
+		return $twig->render($response, 'guildAdminPanel.twig', [
+			'user' => $user,
+			'guild' => $guild,
+			'flashes' => Flashes::all()
+		]);
+	}
+
 	/**
 	 * @throws SyntaxError
 	 * @throws RuntimeError
@@ -51,6 +67,7 @@ class GuildController extends AbstractController{
 	 */
 	public function viewCreateGuild(Request $request, Response $response, Twig $twig): Response {
 		$user = $request->getAttribute(User::class);
+
 		return $twig->render($response, 'guildCreation.twig', [
 			'user' => $user,
 			'flashes' => Flashes::all()

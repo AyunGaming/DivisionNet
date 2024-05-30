@@ -5,6 +5,7 @@ namespace division\Data\DAO\guild;
 use division\Data\DAO\BaseDAO;
 use division\Data\DAO\Interfaces\IGuildDAO;
 use division\Models\Guild;
+use division\Models\User;
 use PDOException;
 
 class GuildDAO extends BaseDAO implements IGuildDAO {
@@ -37,6 +38,29 @@ class GuildDAO extends BaseDAO implements IGuildDAO {
 
 			return $guilds;
 		} catch (PDOException) {
+			return [];
 		}
+	}
+
+	public function getByOwner(User $owner): ?Guild {
+		try{
+			$req = $this->database->prepare('SELECT * FROM guilds WHERE owner = ?');
+			$req->bindValue(1, $owner->getId());
+			$req->execute();
+
+			$data = $req->fetch();
+			if(is_bool($data)){
+				return null;
+			}
+
+			$data['owner'] = $owner;
+			$guild = new Guild();
+			$guild->hydrate($data);
+
+			return $guild;
+		} catch (PDOException) {
+			return null;
+		}
+
 	}
 }
