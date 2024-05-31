@@ -29,7 +29,7 @@ class GuildController extends AbstractController{
 		$post = $request->getParsedBody();
 
 		$parser = RouteContext::fromRequest($request)->getRouteParser();
-		$res = $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('manage-guild')); //TODO: Replace by "manage-guild"
+		$res = $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('manage-guild'));
 
 		$post['owner'] = $request->getAttribute(User::class);
 
