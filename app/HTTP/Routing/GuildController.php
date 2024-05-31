@@ -40,6 +40,8 @@ class GuildController extends AbstractController{
 
 		try {
 			$this->guildManager->create($post);
+			$guild = $this->guildManager->getByOwner($post['owner']);
+			$this->guildManager->addMember($guild, $post['owner']); // Ajoute l'owner a sa propre guilde (c'est mieux quand même xD)
 			Flashes::add(FlashMessage::success("La guilde {$post['name']} a été créé !"));
 		} catch (\RuntimeException $e) {
 			$res = $response->withStatus(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)->withHeader('Location', $parser->urlFor('guild-creation'));

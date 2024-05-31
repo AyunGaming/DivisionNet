@@ -11,7 +11,15 @@ use Slim\Exception\HttpNotImplementedException;
 
 class GuildMemberDAO extends BaseDAO implements IGuildMemberDAO {
 	public function getGuildMembers(Guild $guild): array {
-		throw new \Exception('Not implemented');
+		try{
+			$req = $this->database->prepare("SELECT * FROM guild_members WHERE guildId = ?");
+			$req->bindValue(1, $guild->getName());
+			$req->execute();
+
+			return $req->fetchAll();
+		} catch (PDOException $e) {
+			return [];
+		}
 	}
 
 	public function addGuildMember(Guild $guild, User $user): void {
