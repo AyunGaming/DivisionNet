@@ -105,6 +105,9 @@ $app->group('/kamenews', static function (RouteCollectorProxy $kamenews) {
 $app->group('/guild', static function (RouteCollectorProxy $guild) {
 	$guild->group('/manage', static function (RouteCollectorProxy $manage) {
 		$manage->get('/delete', [GuildController::class, 'deleteGuild'])->setName('delete-guild');
+		$manage->group('/members', static function (RouteCollectorProxy $members) {
+			$members->post('/add', [GuildController::class, 'addGuildMember'])->setName('add-guild-member');
+		});
 		$manage->get('', [GuildController::class, 'viewManageGuild'])->setName('manage-guild');
 	});
 	$guild->group('/create', static function (RouteCollectorProxy $create) {

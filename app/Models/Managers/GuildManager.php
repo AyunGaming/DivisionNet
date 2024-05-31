@@ -3,14 +3,17 @@
 namespace division\Models\Managers;
 
 use division\Data\DAO\Interfaces\IGuildDAO;
+use division\Data\DAO\Interfaces\IGuildMemberDAO;
 use division\Models\Guild;
 use division\Models\User;
 
 class GuildManager {
 	private IGuildDAO $guildDAO;
+	private IGuildMemberDAO $guildMemberDAO;
 
-	public function __construct(IGuildDAO $guildDAO) {
+	public function __construct(IGuildDAO $guildDAO, IGuildMemberDAO $guildMemberDAO) {
 		$this->guildDAO = $guildDAO;
+		$this->guildMemberDAO = $guildMemberDAO;
 	}
 
 	public function create(array $data): void {
@@ -29,5 +32,9 @@ class GuildManager {
 
 	public function delete(Guild $guild): void {
 		$this->guildDAO->delete($guild);
+	}
+
+	public function addMember(Guild $guild, User $user): void {
+		$this->guildMemberDAO->addGuildMember($guild, $user);
 	}
 }

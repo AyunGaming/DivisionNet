@@ -3,8 +3,11 @@
 namespace division\HTTP\Routing;
 
 use division\Data\DAO\guild\GuildDAO;
+use division\Data\DAO\guild\GuildMemberDAO;
+use division\Data\DAO\UserDAO;
 use division\Data\Database;
 use division\Models\Managers\GuildManager;
+use division\Models\Managers\UserManager;
 use division\Models\User;
 use division\Utils\Flashes;
 use division\Utils\FlashMessage;
@@ -19,10 +22,12 @@ use Twig\Error\SyntaxError;
 
 class GuildController extends AbstractController{
 	private GuildManager $guildManager;
+	private UserManager $userManager;
 
 	public function __construct(Database $database){
 		parent::__construct($database);
-		$this->guildManager = new GuildManager(new GuildDAO($this->database));
+		$this->guildManager = new GuildManager(new GuildDAO($this->database), new GuildMemberDAO($this->database));
+		$this->userManager = new UserManager(new UserDAO($this->database));
 	}
 
 	public function create(Response $response, Request $request): Response{
@@ -52,6 +57,18 @@ class GuildController extends AbstractController{
 
 		$parser = RouteContext::fromRequest($request)->getRouteParser();
 		return $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('create-guild'));
+	}
+
+	public function addGuildMember(Request $request, Response $response): Response {
+		$post = $request->getParsedBody();
+		$owner = $this->userManager->getById($post['owner']);
+		$guild = $this->guildManager->getByOwner($owner);
+
+		$addUser = $this->userManager->getById($post['addMember']);
+		$this->guildManager->addMember($guild, $addUser);
+
+		$parser = RouteContext::fromRequest($request)->getRouteParser();
+		return $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('home'));
 	}
 
 	public function viewManageGuild(Request $request, Response $response, Twig $twig): Response{
