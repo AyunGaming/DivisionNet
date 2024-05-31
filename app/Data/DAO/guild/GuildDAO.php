@@ -66,7 +66,7 @@ class GuildDAO extends BaseDAO implements IGuildDAO {
 
 	public function delete(Guild $guild): void {
 		try{
-			$req = $this->database->prepare('DELETE FROM guilds WHERE id = ?');
+			$req = $this->database->prepare('DELETE FROM guilds WHERE name = ?');
 			$req->bindValue(1, $guild->getName());
 			$req->execute();
 		} catch (PDOException) {
