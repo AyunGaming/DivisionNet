@@ -11,4 +11,6 @@ interface IGuildDAO {
 	public function getAll(): array;
 
 	public function getByOwner(User $owner): ?Guild;
+
+	public function delete(Guild $guild): void;
 }

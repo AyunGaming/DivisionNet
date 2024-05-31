@@ -29,7 +29,7 @@ class GuildController extends AbstractController{
 		$post = $request->getParsedBody();
 
 		$parser = RouteContext::fromRequest($request)->getRouteParser();
-		$res = $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('home')); //TODO: Replace by "manage-guild"
+		$res = $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('manage-guild')); //TODO: Replace by "manage-guild"
 
 		$post['owner'] = $request->getAttribute(User::class);
 
@@ -42,6 +42,16 @@ class GuildController extends AbstractController{
 		}
 
 		return $res;
+	}
+
+	public function deleteGuild(Request $request, Response $response): Response{
+		$user = $request->getAttribute(User::class);
+		$guild = $this->guildManager->getByOwner($user);
+
+		$this->guildManager->delete($guild);
+
+		$parser = RouteContext::fromRequest($request)->getRouteParser();
+		return $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('create-guild'));
 	}
 
 	public function viewManageGuild(Request $request, Response $response, Twig $twig): Response{

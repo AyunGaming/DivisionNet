@@ -22,4 +22,12 @@ class GuildManager {
 	public function getByOwner(User $user): ?Guild {
 		return $this->guildDAO->getByOwner($user);
 	}
+
+	public function getAll(): array {
+		return $this->guildDAO->getAll();
+	}
+
+	public function delete(Guild $guild): void {
+		$this->guildDAO->delete($guild);
+	}
 }

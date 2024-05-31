@@ -104,12 +104,14 @@ $app->group('/kamenews', static function (RouteCollectorProxy $kamenews) {
 
 $app->group('/guild', static function (RouteCollectorProxy $guild) {
 	$guild->group('/manage', static function (RouteCollectorProxy $manage) {
+		$manage->get('/delete', [GuildController::class, 'deleteGuild'])->setName('delete-guild');
 		$manage->get('', [GuildController::class, 'viewManageGuild'])->setName('manage-guild');
 	});
 	$guild->group('/create', static function (RouteCollectorProxy $create) {
 		$create->post('', [GuildController::class, 'create'])->setName('create-guild');
 		$create->get('', [GuildController::class, 'viewCreateGuild'])->setName('guild-creation');
 	});
+
 });
 
 $app->get('/', static function (ServerRequestInterface $request, ResponseInterface $response, Twig $twig): ResponseInterface {
