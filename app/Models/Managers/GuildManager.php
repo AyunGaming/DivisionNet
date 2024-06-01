@@ -49,6 +49,10 @@ class GuildManager {
 		return $guilds;
 	}
 
+	public function removeMember(User $user): void {
+		$this->guildMemberDAO->removeGuildMember($user);
+	}
+
 	public function delete(Guild $guild): void {
 		$this->guildDAO->delete($guild);
 	}

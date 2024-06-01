@@ -107,6 +107,7 @@ $app->group('/guild', static function (RouteCollectorProxy $guild) {
 		$manage->get('/delete', [GuildController::class, 'deleteGuild'])->setName('delete-guild');
 		$manage->group('/members', static function (RouteCollectorProxy $members) {
 			$members->post('/accept', [GuildController::class, 'acceptMember'])->setName('accept-member');
+			$members->post('/remove', [GuildController::class, 'removeMember'])->setName('remove-member');
 		});
 		$manage->get('', [GuildController::class, 'viewManageGuild'])->setName('manage-guild');
 	});

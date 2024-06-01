@@ -39,8 +39,15 @@ class GuildMemberDAO extends BaseDAO implements IGuildMemberDAO {
 	/**
 	 * @throws Exception
 	 */
-	public function removeGuildMember(Guild $guild, User $user): void {
-		throw new Exception('Not implemented');
+	public function removeGuildMember(User $user): void {
+		try{
+			$req = $this->database->prepare("DELETE FROM guild_members WHERE userId = ?");
+			$req->bindValue(1, $user->getId());
+
+			$req->execute();
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
 	}
 
 	/**
