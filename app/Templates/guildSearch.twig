@@ -1,0 +1,15 @@
+{% extends 'base.twig' %}
+
+{% block body %}
+	<h1>Search guild</h1>
+	<form action="{{ url_for('join-guild') }}" method="post">
+		<label for="guildSelect"></label>
+		<select name="guild" id="guildSelect">
+			{% for guild in guilds %}
+				<option value="{{ guild.getName() }}">{{ guild.getName() }}</option>
+			{% endfor %}
+		</select>
+		<input type="hidden" name="user" id="user" value="{{ user.getId() }}">
+		<button type="submit" class="btn btn-primary">Join</button>
+	</form>
+{% endblock %}

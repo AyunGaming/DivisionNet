@@ -26,7 +26,7 @@ class GuildController extends AbstractController{
 
 	public function __construct(Database $database){
 		parent::__construct($database);
-		$this->guildManager = new GuildManager(new GuildDAO($this->database), new GuildMemberDAO($this->database));
+		$this->guildManager = new GuildManager(new GuildDAO($this->database), new GuildMemberDAO($this->database), new UserDAO($this->database));
 		$this->userManager = new UserManager(new UserDAO($this->database));
 	}
 
@@ -63,14 +63,26 @@ class GuildController extends AbstractController{
 
 	public function addGuildMember(Request $request, Response $response): Response {
 		$post = $request->getParsedBody();
-		$owner = $this->userManager->getById($post['owner']);
-		$guild = $this->guildManager->getByOwner($owner);
+		$guild = $this->guildManager->getByName($post['guild']);
 
-		$addUser = $this->userManager->getById($post['addMember']);
+		$addUser = $this->userManager->getById($post['user']);
 		$this->guildManager->addMember($guild, $addUser);
 
 		$parser = RouteContext::fromRequest($request)->getRouteParser();
 		return $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location', $parser->urlFor('home'));
+	}
+
+	public function acceptMember(Request $request, Response $response): Response {
+		$post = $request->getParsedBody();
+		$owner = $this->userManager->getById($post['owner']);
+		$guild = $this->guildManager->getByOwner($owner);
+
+		$user = $this->userManager->getById($post['addMember']);
+		$this->guildManager->acceptMember($guild, $user);
+
+		Flashes::add(FlashMessage::success("Le membre {$user->getLogin()} a été accepté dans la guilde !"));
+		$parser = RouteContext::fromRequest($request)->getRouteParser();
+		return $response->withStatus(StatusCodeInterface::STATUS_FOUND)->withHeader('Location' , $parser->urlFor('manage-guild'));
 	}
 
 	public function viewManageGuild(Request $request, Response $response, Twig $twig): Response{
@@ -100,6 +112,16 @@ class GuildController extends AbstractController{
 		return $twig->render($response, 'guildCreation.twig', [
 			'user' => $user,
 			'flashes' => Flashes::all()
+		]);
+	}
+
+	public function viewListGuilds(Request $request, Response $response, Twig $twig): Response {
+		$user = $request->getAttribute(User::class);
+		$guilds = $this->guildManager->getAll();
+
+		return $twig->render($response, 'guildSearch.twig', [
+			'user' => $user,
+			'guilds' => $guilds
 		]);
 	}
 }

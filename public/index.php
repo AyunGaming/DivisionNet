@@ -106,7 +106,7 @@ $app->group('/guild', static function (RouteCollectorProxy $guild) {
 	$guild->group('/manage', static function (RouteCollectorProxy $manage) {
 		$manage->get('/delete', [GuildController::class, 'deleteGuild'])->setName('delete-guild');
 		$manage->group('/members', static function (RouteCollectorProxy $members) {
-			$members->post('/add', [GuildController::class, 'addGuildMember'])->setName('add-guild-member');
+			$members->post('/accept', [GuildController::class, 'acceptMember'])->setName('accept-member');
 		});
 		$manage->get('', [GuildController::class, 'viewManageGuild'])->setName('manage-guild');
 	});
@@ -115,6 +115,10 @@ $app->group('/guild', static function (RouteCollectorProxy $guild) {
 		$create->get('', [GuildController::class, 'viewCreateGuild'])->setName('guild-creation');
 	});
 
+	$guild->group('/join', static function (RouteCollectorProxy $join) {
+		$join->post('', [GuildController::class, 'addGuildMember'])->setName('join-guild');
+	});
+	$guild->get('/list', [GuildController::class, 'viewListGuilds'])->setName('list-guilds');
 });
 
 $app->get('/', static function (ServerRequestInterface $request, ResponseInterface $response, Twig $twig): ResponseInterface {

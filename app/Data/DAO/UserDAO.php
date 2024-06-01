@@ -45,7 +45,6 @@ class UserDAO extends BaseDAO implements IUserDAO {
 			return null;
 		} catch (PDOException $e){
 			var_dump($e->getMessage());
-			die();
 			return null;
 		}
 	}

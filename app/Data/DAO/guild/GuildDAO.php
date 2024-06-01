@@ -28,15 +28,7 @@ class GuildDAO extends BaseDAO implements IGuildDAO {
 			$req = $this->database->prepare('SELECT * FROM guilds');
 			$req->execute();
 
-			$guilds = [];
-			$data = $req->fetchAll();
-			foreach ($data as $datum) {
-				$guild = new Guild();
-				$guild->hydrate($datum);
-				$guilds[] = $guild;
-			}
-
-			return $guilds;
+			return $req->fetchAll();
 		} catch (PDOException) {
 			return [];
 		}
@@ -70,6 +62,32 @@ class GuildDAO extends BaseDAO implements IGuildDAO {
 			$req->bindValue(1, $guild->getName());
 			$req->execute();
 		} catch (PDOException) {
+		}
+	}
+
+	public function getByName(string $name): ?Guild {
+		try{
+			$req = $this->database->prepare('SELECT * FROM guilds WHERE name = ?');
+			$req->bindValue(1, $name);
+			$req->execute();
+
+			$data = $req->fetch();
+
+			$owner = $this->database->prepare('SELECT * FROM users WHERE id = ?');
+			$owner->bindValue(1, $data['owner']);
+			$owner->execute();
+
+			$usr = $owner->fetch();
+			$owner = new User();
+			$owner->hydrate($usr);
+
+			$data['owner'] = $owner;
+			$guild = new Guild();
+			$guild->hydrate($data);
+
+			return $guild;
+		} catch (PDOException) {
+			return null;
 		}
 	}
 }
